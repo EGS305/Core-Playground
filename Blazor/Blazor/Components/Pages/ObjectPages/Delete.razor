@@ -1,0 +1,51 @@
+﻿@page "/objects/delete"
+@using Microsoft.EntityFrameworkCore
+@using Blazor.Models
+@inject IDbContextFactory<Blazor.Data.BlazorContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<div>
+    <h2>Delete object</h2>
+    @if (obj is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <p>Are you sure you want to delete @((MarkupString)obj!.ToString())?</p>
+        <hr />
+
+        <EditForm method="post" Model="obj" OnValidSubmit="DeleteObject" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(obj is null)">Delete</button> |
+            <a href="/objects">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private Object3d? obj;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        obj = await context.Objects.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (obj is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteObject()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Objects.Remove(obj!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/objects");
+    }
+}

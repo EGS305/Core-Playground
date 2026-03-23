@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Search";
+}
+
+<h4>Search a car</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Results">
+            <div class="form-group">
+                <label for="Value" class="control-label"></label>
+                <input name="Value" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

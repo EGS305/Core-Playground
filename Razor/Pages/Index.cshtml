@@ -1,0 +1,57 @@
+﻿@page
+@model IndexModel
+
+<div class="container">
+    @if (Model?.Users != null)
+    {
+        <div class="row p-1">
+            <div class="col-1">User</div>
+            <div class="col-5">
+                <select id="userInput">
+                    @foreach (var user in Model.Users)
+                    {
+                        <option value="@user.Id">@user</option>
+                    }
+                </select>
+                <button type="button" id="editUserButton" class="btn btn-link ms-2">Edit Selected User</button>
+            </div>
+        </div>
+    }
+    <div class="row p-1">
+        <div class="col-1">Message</div>
+        <div class="col-5"><input type="text" class="w-100" id="messageInput" /></div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6 text-end">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <hr />
+        </div>
+    </div>
+    <div class="row p-1">
+        <div class="col-6">
+            <ul id="messagesList"></ul>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+<script>
+    (function () {
+        var editButton = document.getElementById("editUserButton");
+        if (!editButton) return;
+
+        editButton.addEventListener("click", function () {
+            var select = document.getElementById("userInput");
+            if (!select || !select.value) {
+                alert("Please select a user to edit.");
+                return;
+            }
+
+            window.location.href = '/Edit/' + encodeURIComponent(select.value);
+        });
+    })();
+</script>

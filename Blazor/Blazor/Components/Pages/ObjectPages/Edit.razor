@@ -1,0 +1,145 @@
+﻿@page "/objects/edit"
+@using Microsoft.EntityFrameworkCore
+@using Blazor.Models
+@inject IDbContextFactory<Blazor.Data.BlazorContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Edit</PageTitle>
+
+<h2>Edit object</h2>
+<hr />
+
+@if (Obj is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm method="post" Model="Obj" OnValidSubmit="UpdateObject" FormName="edit" Enhance>
+        <DataAnnotationsValidator />
+        <ValidationSummary role="alert" />
+
+        <fieldset>
+            <legend>Position</legend>
+            <div class="row">
+                <div class="col-1 mb-3">
+                    <label class="form-label">X</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Position.X" step="any" />
+                    <ValidationMessage For="@(() => Obj.Position.X)" />
+                </div>
+                <div class="col-1 mb-3">
+                    <label class="form-label">Y</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Position.Y" step="any" />
+                    <ValidationMessage For="@(() => Obj.Position.Y)" />
+                </div>
+                <div class="col-1 mb-3">
+                    <label class="form-label">Z</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Position.Z" step="any" />
+                    <ValidationMessage For="@(() => Obj.Position.Z)" />
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="mt-3">
+            <legend>Size</legend>
+            <div class="row">
+                <div class="col-1 mb-3">
+                    <label class="form-label">X</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Size.X" step="any" />
+                    <ValidationMessage For="@(() => Obj.Size.X)" />
+                </div>
+                <div class="col-1 mb-3">
+                    <label class="form-label">Y</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Size.Y" step="any" />
+                    <ValidationMessage For="@(() => Obj.Size.Y)" />
+                </div>
+                <div class="col-1 mb-3">
+                    <label class="form-label">Z</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Size.Z" step="any" />
+                    <ValidationMessage For="@(() => Obj.Size.Z)" />
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset class="mt-3">
+            <legend>Color</legend>
+            <div class="row">
+                <div class="col-1 mb-3">
+                    <label class="form-label">R</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Color.X" step="any" />
+                    <ValidationMessage For="@(() => Obj.Color.X)" />
+                </div>
+                <div class="col-1 mb-3">
+                    <label class="form-label">G</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Color.Y" step="any" />
+                    <ValidationMessage For="@(() => Obj.Color.Y)" />
+                </div>
+                <div class="col-1 mb-3">
+                    <label class="form-label">B</label>
+                    <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Color.Z" step="any" />
+                    <ValidationMessage For="@(() => Obj.Color.Z)" />
+                </div>
+            </div>
+        </fieldset>
+        
+        <input type="hidden" name="Object.Id" value="@Obj.Id" />
+        <button type="submit" class="btn btn-primary">Save</button>
+    </EditForm>
+}
+
+<div>
+    <a href="/objects">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Object3d? Obj { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Obj ??= await context.Objects.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Obj is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task UpdateObject()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Obj!).State = EntityState.Modified;
+        context.Attach(Obj!.Position).State = EntityState.Modified;
+        context.Attach(Obj!.Size).State = EntityState.Modified;
+        context.Attach(Obj!.Color).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ObjectExists(Obj!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/objects");
+    }
+
+    private bool ObjectExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Objects.Any(e => e.Id == id);
+    }
+}

@@ -1,0 +1,30 @@
+@using Microsoft.AspNetCore.Components.Routing
+
+<nav class="nav-menu">
+    <ul>
+        <li><NavLink href="/" Match="NavLinkMatch.All">Home</NavLink></li>
+        <li><NavLink href="/todo">Todo</NavLink></li>
+        <li><NavLink href="/objects">Objects</NavLink></li>
+    </ul>
+</nav>
+
+<style>
+.nav-menu {
+    padding: 1rem;
+    background: #f8f9fa;
+}
+.nav-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 1rem;
+}
+.nav-menu a {
+    text-decoration: none;
+    color: #333;
+}
+.nav-menu a.active {
+    font-weight: bold;
+}
+</style>

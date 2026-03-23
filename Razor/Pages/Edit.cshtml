@@ -1,0 +1,25 @@
+@page "{id:int}"
+@model EditModel
+
+<div class="container">
+    <h1>Edit User</h1>
+
+    <form method="post">
+        <input type="hidden" asp-for="User.Id" />
+
+        <div class="mb-3">
+            <label asp-for="User.Username" class="form-label">Username</label>
+            <input asp-for="User.Username" class="form-control" />
+            <span asp-validation-for="User.Username" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="User.About" class="form-label">About</label>
+            <textarea asp-for="User.About" class="form-control"></textarea>
+            <span asp-validation-for="User.About" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-page="/Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
