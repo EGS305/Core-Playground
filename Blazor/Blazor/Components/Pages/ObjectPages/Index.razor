@@ -17,9 +17,7 @@
 <QuickGrid Class="table" Items="context.Objects">
     <TemplateColumn Context="obj">
         <span>@((MarkupString)obj.ToString())</span>
-        <a href="@($"objects/edit?id={obj.Id}")">Edit</a> |
-        <a href="@($"objects/details?id={obj.Id}")">Details</a> |
-        <a href="@($"objects/delete?id={obj.Id}")">Delete</a>
+        <a href="@($"objects/edit?id={obj.Id}")">Edit</a>
     </TemplateColumn>
 </QuickGrid>
 
