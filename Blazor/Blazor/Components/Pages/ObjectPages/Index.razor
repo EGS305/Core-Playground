@@ -1,4 +1,5 @@
 ﻿@page "/objects"
+@rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Blazor.Models
@@ -14,7 +15,12 @@
     <a href="objects/create">Create new object</a>
 </p>
 
-<QuickGrid Class="table" Items="context.Objects">
+<p>
+    X between <input type="number" placeholder="From" @bind="From" />
+    and <input type="number" placeholder="Until" @bind="Until" />.
+</p>
+
+<QuickGrid Class="table" Items="context.Objects.Where(obj => obj.Position.X >= From && obj.Position.X <= Until)">
     <TemplateColumn Context="obj">
         <span>@((MarkupString)obj.ToString())</span>
         <a href="@($"objects/edit?id={obj.Id}")">Edit</a>
@@ -23,6 +29,8 @@
 
 @code {
     private BlazorContext context = default!;
+    private float From = -5;
+    private float Until = 5;
 
     protected override void OnInitialized()
     {
