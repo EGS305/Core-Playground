@@ -7,7 +7,6 @@ builder.Services.AddDbContextFactory<BlazorContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BlazorContext") ?? throw new InvalidOperationException("Connection string 'BlazorContext' not found.")));
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //Add services to the container.
