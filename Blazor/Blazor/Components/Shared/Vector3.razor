@@ -1,0 +1,30 @@
+﻿@using Vec3 = Blazor.Models.Vector3;
+
+<fieldset>
+    <legend>@Label</legend>
+    <div class="row">
+        <div class="col-1 mb-3">
+            <label class="form-label">X</label>
+            <InputNumber TValue="float" class="form-control" @bind-Value="Vector.X" step="any" />
+            <ValidationMessage For="@(() => Vector.X)" />
+        </div>
+        <div class="col-1 mb-3">
+            <label class="form-label">Y</label>
+            <InputNumber TValue="float" class="form-control" @bind-Value="Vector.Y" step="any" />
+            <ValidationMessage For="@(() => Vector.Y)" />
+        </div>
+        <div class="col-1 mb-3">
+            <label class="form-label">Z</label>
+            <InputNumber TValue="float" class="form-control" @bind-Value="Vector.Z" step="any" />
+            <ValidationMessage For="@(() => Vector.Z)" />
+        </div>
+    </div>
+</fieldset>
+
+@code {
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public Vec3 Vector { get; set; } = new(0, 0, 0);
+}

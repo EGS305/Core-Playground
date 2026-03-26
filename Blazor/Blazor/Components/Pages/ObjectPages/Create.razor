@@ -1,6 +1,7 @@
 ﻿@page "/objects/create"
 @rendermode InteractiveServer
 @using Microsoft.EntityFrameworkCore
+@using Blazor.Components.Shared
 @using Blazor.Models
 @inject IDbContextFactory<Blazor.Data.BlazorContext> DbFactory
 @inject NavigationManager NavigationManager
@@ -13,69 +14,9 @@
 <EditForm Model="Obj" OnValidSubmit="AddObject" FormName="create" Enhance>
     <DataAnnotationsValidator />
     <ValidationSummary class="text-danger" role="alert" />
-
-    <fieldset>
-        <legend>Position</legend>
-        <div class="row">
-            <div class="col-1 mb-3">
-                <label class="form-label">X</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Position.X" step="any" />
-                <ValidationMessage For="@(() => Obj.Position.X)" />
-            </div>
-            <div class="col-1 mb-3">
-                <label class="form-label">Y</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Position.Y" step="any" />
-                <ValidationMessage For="@(() => Obj.Position.Y)" />
-            </div>
-            <div class="col-1 mb-3">
-                <label class="form-label">Z</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Position.Z" step="any" />
-                <ValidationMessage For="@(() => Obj.Position.Z)" />
-            </div>
-        </div>
-    </fieldset>
-
-    <fieldset class="mt-3">
-        <legend>Size</legend>
-        <div class="row">
-            <div class="col-1 mb-3">
-                <label class="form-label">X</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Size.X" step="any" />
-                <ValidationMessage For="@(() => Obj.Size.X)" />
-            </div>
-            <div class="col-1 mb-3">
-                <label class="form-label">Y</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Size.Y" step="any" />
-                <ValidationMessage For="@(() => Obj.Size.Y)" />
-            </div>
-            <div class="col-1 mb-3">
-                <label class="form-label">Z</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Size.Z" step="any" />
-                <ValidationMessage For="@(() => Obj.Size.Z)" />
-            </div>
-        </div>
-    </fieldset>
-
-    <fieldset class="mt-3">
-        <legend>Color</legend>
-        <div class="row">
-            <div class="col-1 mb-3">
-                <label class="form-label">R</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Color.X" step="any" />
-                <ValidationMessage For="@(() => Obj.Color.X)" />
-            </div>
-            <div class="col-1 mb-3">
-                <label class="form-label">G</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Color.Y" step="any" />
-                <ValidationMessage For="@(() => Obj.Color.Y)" />
-            </div>
-            <div class="col-1 mb-3">
-                <label class="form-label">B</label>
-                <InputNumber TValue="float" class="form-control" @bind-Value="Obj.Color.Z" step="any" />
-                <ValidationMessage For="@(() => Obj.Color.Z)" />
-            </div>
-        </div>
-    </fieldset>
+    <Vector3 Label="Position" Vector="Obj.Position" />
+    <Vector3 Label="Size" Vector="Obj.Size" />
+    <Vector3 Label="Color" Vector="Obj.Color" />
 
     <div class="mt-3">
         <button type="submit" class="btn btn-primary">Create</button>
