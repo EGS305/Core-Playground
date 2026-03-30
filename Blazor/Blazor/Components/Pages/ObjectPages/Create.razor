@@ -14,9 +14,9 @@
 <EditForm Model="Obj" OnValidSubmit="AddObject" FormName="create" Enhance>
     <DataAnnotationsValidator />
     <ValidationSummary class="text-danger" role="alert" />
-    <Vector3 Label="Position" Vector="Obj.Position" />
-    <Vector3 Label="Size" Vector="Obj.Size" />
-    <Vector3 Label="Color" Vector="Obj.Color" />
+    <Vector3 Label="Position" @bind-value="Obj.Position" />
+    <Vector3 Label="Size" @bind-value="Obj.Size" />
+    <Vector3 Label="Color" @bind-value="Obj.Color" />
 
     <div class="mt-3">
         <button type="submit" class="btn btn-primary">Create</button>

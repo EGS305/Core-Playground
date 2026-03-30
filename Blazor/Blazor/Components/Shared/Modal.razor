@@ -1,0 +1,31 @@
+﻿<div class="modal @modalClass" tabindex="-1" style="display:@modalDisplay;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">@ChildContent</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @onclick="OnSave">@SaveLabel</button>
+                <button type="button" class="btn btn-secondary" @onclick="() => Toggle(false)">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    public string Title { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnSave { get; set; }
+    [Parameter] public string SaveLabel { get; set; } = "Save";
+
+    private string modalClass = "fade";
+    private string modalDisplay = "none";
+
+    public void Toggle(bool show)
+    {
+        modalClass = show ? "show" : "fade";
+        modalDisplay = show ? "block" : "none";
+    }
+}

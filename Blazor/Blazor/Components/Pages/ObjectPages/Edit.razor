@@ -20,9 +20,9 @@ else
     <EditForm method="post" Model="Obj" OnValidSubmit="UpdateObject" FormName="edit" Enhance>
         <DataAnnotationsValidator />
         <ValidationSummary role="alert" />
-        <Vector3 Label="Position" Vector="Obj.Position" />
-        <Vector3 Label="Size" Vector="Obj.Size" />
-        <Vector3 Label="Color" Vector="Obj.Color" />
+        <Vector3 Label="Position" @bind-value="Obj.Position" />
+        <Vector3 Label="Size" @bind-value="Obj.Size" />
+        <Vector3 Label="Color" @bind-value="Obj.Color" />
 
         <input type="hidden" name="Object.Id" value="@Obj.Id" />
         <button type="submit" class="btn btn-primary">Save</button>

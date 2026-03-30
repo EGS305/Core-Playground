@@ -4,40 +4,115 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Blazor.Models
 @using Blazor.Data
+@using Blazor.Components.Shared
 @implements IAsyncDisposable
 @inject IDbContextFactory<Blazor.Data.BlazorContext> DbFactory
 
 <PageTitle>Objects</PageTitle>
 
-<h1>List of objects</h1>
+<canvas id="Panel" width="640" height="480"></canvas>
 
-<p>
-    <a href="objects/create">Create new object</a>
-</p>
-
-<p>
-    X between <input type="number" placeholder="From" @bind="from" />
-    and <input type="number" placeholder="Until" @bind="until" />.
-</p>
+<div class="d-flex justify-content-between">
+    <div>X between <input type="number" placeholder="From" @bind="from" /> and <input type="number" placeholder="Until" @bind="until" />.</div>
+    <div><button class="btn btn-secondary" @onclick="() => OpenModal()">Add new object</button></div>
+</div>
 
 <QuickGrid Class="table" Pagination="pagination" Items="context.Objects.Where(obj => obj.Position.X >= from && obj.Position.X <= until)">
     <TemplateColumn Context="obj">
         <span>@((MarkupString)obj.ToString())</span>
-        <a href="@($"objects/edit?id={obj.Id}")">Edit</a>
+        <button class="btn btn-link py-0" @onclick="() => OpenModal(obj)">Edit</button> |
+        <button class="btn btn-link py-0" @onclick="() => OpenDelete(obj)">Delete</button>
     </TemplateColumn>
 </QuickGrid>
 <Paginator State="pagination" />
 
+<Modal @ref="objectModal" OnSave="Save">
+    <EditForm FormName="objectForm" EditContext="ObjContext">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="text-danger" role="alert" />
+        <Vector3 Label="Position" Value="Obj.Position" />
+        <ValidationMessage For="@(() => Obj.Position)" />
+        <Vector3 Label="Size" Value="Obj.Size" />
+        <ValidationMessage For="@(() => Obj.Size)" />
+        <Vector3 Label="Color" Value="Obj.Color" />
+        <ValidationMessage For="@(() => Obj.Color)" />
+    </EditForm>
+</Modal>
+
+<Modal @ref="deleteModal" OnSave="Delete" SaveLabel="Delete">
+    <p>Are you sure you want to delete @((MarkupString)Obj!.ToString())?</p>
+</Modal>
+
 @code {
     private BlazorContext context = default!;
+    private Object3d Obj { get; set; } = new();
+    private EditContext ObjContext = default!;
     private float from = -10;
     private float until = 10;
     private PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
+    private Modal objectModal = default!;
+    private Modal deleteModal = default!;
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+        ObjContext = new EditContext(Obj);
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
+
+    private void OpenModal(Object3d? obj = null)
+    {
+        if (obj != null) Obj = obj;
+        ObjContext = new EditContext(Obj);
+        objectModal.Title = obj != null ? "Edit object" : "Add new object";
+        objectModal.Toggle(true);
+    }
+
+    private async Task Save()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        if (!ObjContext.Validate())
+        {
+            return;
+        }
+
+        if (Obj.Id != 0)
+        {
+            context.Attach(Obj).State = EntityState.Modified;
+            context.Attach(Obj.Position).State = EntityState.Modified;
+            context.Attach(Obj.Size).State = EntityState.Modified;
+            context.Attach(Obj.Color).State = EntityState.Modified;
+        }
+        else
+        {
+            context.Objects.Add(Obj);
+        }
+
+        try
+        {
+            await context.SaveChangesAsync();
+            objectModal.Toggle(false);
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw;
+        }
+    }
+
+    private void OpenDelete(Object3d obj)
+    {
+        Obj = obj;
+        deleteModal.Title = "Delete object";
+        deleteModal.Toggle(true);
+    }
+
+    private async Task Delete()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Objects.Remove(Obj!);
+        await context.SaveChangesAsync();
+        deleteModal.Toggle(false);
+    }
 }

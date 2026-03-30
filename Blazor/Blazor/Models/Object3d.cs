@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public Vector3 Position { get; set; } = new Vector3(0, 0, 0);
+        [VectorSize]
         public Vector3 Size { get; set; } = new Vector3(1, 1, 1);
         public Vector3 Color { get; set; } = new Vector3(1, 0, 0);
 
