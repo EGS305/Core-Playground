@@ -7,17 +7,18 @@
 @using Blazor.Components.Shared
 @implements IAsyncDisposable
 @inject IDbContextFactory<Blazor.Data.BlazorContext> DbFactory
+@inject IJSRuntime JS;
 
 <PageTitle>Objects</PageTitle>
 
-<canvas id="Panel" width="640" height="480"></canvas>
+<canvas id="3dPanel" width="640" height="480"></canvas>
 
 <div class="d-flex justify-content-between">
     <div>X between <input type="number" placeholder="From" @bind="from" /> and <input type="number" placeholder="Until" @bind="until" />.</div>
     <div><button class="btn btn-secondary" @onclick="() => OpenModal()">Add new object</button></div>
 </div>
 
-<QuickGrid Class="table" Pagination="pagination" Items="context.Objects.Where(obj => obj.Position.X >= from && obj.Position.X <= until)">
+<QuickGrid Class="table" Pagination="pagination" Items="FilteredObjects">
     <TemplateColumn Context="obj">
         <span>@((MarkupString)obj.ToString())</span>
         <button class="btn btn-link py-0" @onclick="() => OpenModal(obj)">Edit</button> |
@@ -45,6 +46,7 @@
 
 @code {
     private BlazorContext context = default!;
+    private IQueryable<Object3d> FilteredObjects => context.Objects.Where(obj => obj.Position.X >= from && obj.Position.X <= until);
     private Object3d Obj { get; set; } = new();
     private EditContext ObjContext = default!;
     private float from = -10;
@@ -57,6 +59,12 @@
     {
         context = DbFactory.CreateDbContext();
         ObjContext = new EditContext(Obj);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) await JS.InvokeVoidAsync("gx.Init", "3dPanel");
+        await JS.InvokeVoidAsync("gx.Update", FilteredObjects.ToList());
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
@@ -94,6 +102,7 @@
         {
             await context.SaveChangesAsync();
             objectModal.Toggle(false);
+            await JS.InvokeVoidAsync("gx.Update", FilteredObjects.ToList());
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -114,5 +123,6 @@
         context.Objects.Remove(Obj!);
         await context.SaveChangesAsync();
         deleteModal.Toggle(false);
+        await JS.InvokeVoidAsync("gx.Update", FilteredObjects.ToList());
     }
 }
