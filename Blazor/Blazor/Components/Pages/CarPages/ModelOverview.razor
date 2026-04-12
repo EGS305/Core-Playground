@@ -1,0 +1,14 @@
+﻿@using Blazor.Models
+@using Blazor.Services
+@inject DataService Data;
+
+<h3>@Selection.Brand models</h3>
+
+@code {
+    [CascadingParameter] private CarSelection Selection { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        Selection.Changed += StateHasChanged;
+    }
+}

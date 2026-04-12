@@ -1,0 +1,40 @@
+﻿@using Blazor.Components.Shared
+@using Blazor.Data
+@using Blazor.Models
+@using Blazor.Services
+@inject DataService Data;
+
+<h3>Brands</h3>
+
+@foreach (var brand in brands)
+{
+    <div class="card">
+        <div class="card-body @(brand == Selection.Brand ? "text-bg-primary" : string.Empty)" @onclick="() => Selection.Brand = brand">
+            <button class="btn btn-link float-end" @onclick="() => brandModal.Toggle(true, brand.Name)">Edit</button>
+            @if (!string.IsNullOrEmpty(brand.LogoUrl))
+            {
+                <img src="@brand.LogoUrl" width="64" height="64" class="card-img-top mb-3" alt="@brand.Name" />
+            }
+            <h5 class="card-title">@brand.Name</h5>
+            @if (brand.Country != null)
+            {
+                <p class="card-text">Country: @brand.Country.Name</p>
+            }
+        </div>
+    </div>
+}
+
+<Modal @ref="brandModal">
+    <BrandDialog />
+</Modal>
+
+@code {
+    [CascadingParameter] private CarSelection Selection { get; set; } = default!;
+    private Modal brandModal = default!;
+    private IEnumerable<Brand> brands = default!;
+
+    protected override void OnInitialized()
+    {
+        brands = Data.GetBrands();
+    }
+}

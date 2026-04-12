@@ -44,3 +44,20 @@ h1:focus {
 .quickgrid tbody tr td:empty {
     display: none !important;
 }
+
+.nav-item a.active {
+    font-weight: bold;
+    background-color: dodgerblue;
+    padding: 4px;
+    border-radius: 2px;
+}
+
+.car-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 10px;
+}
+
+    .car-grid div {
+        padding: 10px;
+    }

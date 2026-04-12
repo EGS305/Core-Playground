@@ -1,0 +1,15 @@
+﻿@using Blazor.Models
+
+<div>
+    <label>Country:</label>
+    <span>@Selection.Brand?.Country?.Name</span>
+</div>
+
+<div>
+    <label>Logo URL:</label>
+    <input type="text" value="@Selection.Brand?.LogoUrl" />
+</div>
+
+@code {
+    [CascadingParameter] private CarSelection Selection { get; set; } = default!;
+}

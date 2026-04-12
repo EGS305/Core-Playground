@@ -2,10 +2,12 @@
 @using Blazor.Components.Shared
 
 <div class="page">
-    <NavMenu />
-    <main>
-        @Body
-    </main>
+    <CascadingValue Name="User" Value="@("Eric")">
+        <NavMenu />
+        <main>
+            @Body
+        </main>
+    </CascadingValue>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>

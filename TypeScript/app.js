@@ -64,6 +64,6 @@ const tahoe = new Car("Chevrolet", "Tahoe", 1992);
 tahoe.show();
 const key = "brand";
 let uno = new Car("Fiat", "Uno", 1990);
-console.log(uno.show());
+console.log(uno?.show());
 process.stdin.resume(); //Keeps the console open.
 //# sourceMappingURL=app.js.map

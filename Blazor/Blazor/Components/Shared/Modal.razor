@@ -3,12 +3,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">@Title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="Cancel"></button>
             </div>
             <div class="modal-body">@ChildContent</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" @onclick="OnSave">@SaveLabel</button>
-                <button type="button" class="btn btn-secondary" @onclick="() => Toggle(false)">Cancel</button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
             </div>
         </div>
     </div>
@@ -18,14 +18,22 @@
     public string Title { get; set; } = string.Empty;
     [Parameter] public RenderFragment? ChildContent { get; set; }
     [Parameter] public EventCallback OnSave { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
     [Parameter] public string SaveLabel { get; set; } = "Save";
 
     private string modalClass = "fade";
     private string modalDisplay = "none";
 
-    public void Toggle(bool show)
+    public void Toggle(bool show, string? title = null)
     {
+        if (title != null) Title = title;
         modalClass = show ? "show" : "fade";
         modalDisplay = show ? "block" : "none";
+    }
+
+    private async void Cancel()
+    {
+        await OnCancel.InvokeAsync();
+        Toggle(false);
     }
 }

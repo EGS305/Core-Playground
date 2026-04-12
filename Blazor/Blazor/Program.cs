@@ -1,5 +1,6 @@
 ﻿using Blazor.Components;
 using Blazor.Data;
+using Blazor.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorComponents() //enable Razor
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
+builder.Services.AddScoped<DataService>(); //The scope is the SignalR circuit.
 
 var app = builder.Build();
 

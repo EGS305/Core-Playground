@@ -1,0 +1,35 @@
+﻿@page "/cars"
+@rendermode InteractiveServer
+@using Blazor.Models
+
+<PageTitle>Cars</PageTitle>
+
+<div>
+    <input type="checkbox" id="brandOverview" class="btn-check" @bind="showBrandOverview" />
+    <label for="brandOverview" class="btn">Brand</label>
+    <input type="checkbox" id="modelOverview" class="btn-check" @bind="showModelOverview" />
+    <label for="modelOverview" class="btn">Models</label>
+</div>
+
+<div class="car-grid">
+    <CascadingValue Value="Selection">
+        @if (showBrandOverview)
+        {
+            <div>
+                <BrandOverview />
+            </div>
+        }
+        @if (showModelOverview)
+        {
+            <div>
+                <ModelOverview />
+            </div>
+        }
+    </CascadingValue>
+</div>
+
+@code {
+    private bool showBrandOverview = true;
+    private bool showModelOverview = true;
+    private CarSelection Selection = new CarSelection();
+}
