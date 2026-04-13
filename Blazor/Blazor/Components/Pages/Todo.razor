@@ -1,6 +1,8 @@
 ﻿@page "/todo"
 @rendermode InteractiveServer
 @using Blazor.Models
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager NavigationManager
 
 <PageTitle>Todo</PageTitle>
 
@@ -22,6 +24,14 @@
 @code {
     private List<TodoItem> items = new List<TodoItem>();
     private string? title;
+
+    protected override void OnInitialized()
+    {
+        var parameters = QueryHelpers.ParseQuery(NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query);
+        if (!parameters.TryGetValue("item", out var items) || items.Count <= 0) return;
+        foreach (var item in items)
+            this.items.Add(new TodoItem(item));
+    }
 
     private void Add()
     {
