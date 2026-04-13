@@ -1,0 +1,8 @@
+﻿@page "/todo/detail"
+@rendermode InteractiveServer
+@using Blazor.Services
+@inject TodoService TodoService
+
+<h3>@TodoService.Items.Count todo(s)</h3>
+
+<a href="@($"/todo")">Back to list</a>

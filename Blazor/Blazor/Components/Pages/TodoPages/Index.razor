@@ -1,19 +1,22 @@
 ﻿@page "/todo"
 @rendermode InteractiveServer
 @using Blazor.Models
+@using Blazor.Services
 @using Microsoft.AspNetCore.WebUtilities
 @inject NavigationManager NavigationManager
+@inject TodoService TodoService
 
 <PageTitle>Todo</PageTitle>
 
-<h3>Todo (@items.Count(item => !item.IsDone))</h3>
+<h3>Todo (@TodoService.Items.Count(item => !item.IsDone))</h3>
 
 <ul>
-    @foreach (var item in items)
+    @foreach (var item in TodoService.Items)
     {
         <li>
             <input type="checkbox" @bind="item.IsDone" />
             <input type="text" @bind="item.Title" />
+            <a href="@($"/todo/detail?item={item.Title}")">Detail</a>
         </li>
     }
 </ul>
@@ -22,7 +25,6 @@
 <button @onclick="Add">Add</button>
 
 @code {
-    private List<TodoItem> items = new List<TodoItem>();
     private string? title;
 
     protected override void OnInitialized()
@@ -30,13 +32,13 @@
         var parameters = QueryHelpers.ParseQuery(NavigationManager.ToAbsoluteUri(NavigationManager.Uri).Query);
         if (!parameters.TryGetValue("item", out var items) || items.Count <= 0) return;
         foreach (var item in items)
-            this.items.Add(new TodoItem(item));
+            this.TodoService.Items.Add(new TodoItem(item));
     }
 
     private void Add()
     {
         if (string.IsNullOrWhiteSpace(title)) return;
-        items.Add(new TodoItem(title));
+        TodoService.Items.Add(new TodoItem(title));
         title = null;
     }
 }

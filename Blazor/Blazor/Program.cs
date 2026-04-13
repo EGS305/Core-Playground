@@ -15,6 +15,7 @@ builder.Services.AddRazorComponents() //enable Razor
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 builder.Services.AddScoped<DataService>(); //The scope is the SignalR circuit.
+builder.Services.AddScoped<TodoService>();
 
 var app = builder.Build();
 
