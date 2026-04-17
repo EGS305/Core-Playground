@@ -33,6 +33,5 @@ app.UseAntiforgery(); //for forms
 app.MapStaticAssets(); //Endpoints for images, css files etc.
 app.MapRazorComponents<App>() //Endpoints for Razor components.
     .AddInteractiveServerRenderMode()
-    .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Blazor.Client._Imports).Assembly);
+    .AddInteractiveWebAssemblyRenderMode();
 app.Run();

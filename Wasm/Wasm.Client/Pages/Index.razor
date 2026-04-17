@@ -1,0 +1,14 @@
+﻿@page "/"
+@inject HttpClient Http
+
+<h3>WASM</h3>
+<p>@test</p>
+
+@code {
+    private string? test;
+
+    protected override async Task OnInitializedAsync()
+    {
+        test = await Http.GetStringAsync("api/car");
+    }
+}
