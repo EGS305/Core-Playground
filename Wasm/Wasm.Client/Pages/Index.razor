@@ -2,13 +2,19 @@
 @inject HttpClient Http
 
 <h3>WASM</h3>
-<p>@test</p>
+@if (groups != null)
+{
+    foreach (var group in groups)
+    {
+        <p>@group.Name</p>
+    }
+}
 
 @code {
-    private string? test;
+    private IEnumerable<Group>? groups;
 
     protected override async Task OnInitializedAsync()
     {
-        test = await Http.GetStringAsync("api/car");
+        groups = await Http.GetFromJsonAsync<IEnumerable<Group>>("api/group");
     }
 }
