@@ -1,13 +1,16 @@
 ﻿@page "/"
 @inject HttpClient Http
 
-<h3>WASM</h3>
+<h2>WASM</h2>
+<h3>Automotive groups</h3>
 @if (groups != null)
 {
-    foreach (var group in groups)
-    {
-        <p>@group.Name</p>
-    }
+    <ol>
+        @foreach (var group in groups)
+        {
+            <li><a href="/group/@group.Name">@group.Name</a></li>
+        }
+    </ol>
 }
 
 @code {

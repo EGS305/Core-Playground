@@ -1,0 +1,29 @@
+﻿@page "/group/{name?}" //route constraint: name:int ; catch-all: {*name} ignores '/'
+@inject HttpClient Http
+
+@if (string.IsNullOrEmpty(Name))
+{
+    <a href="">All groups</a>
+    <p>No brand name passed.</p>
+    return;
+}
+
+<h3>@Name</h3>
+@if (brands != null)
+{
+    foreach (var brand in brands)
+    {
+        <div><a href="/brand/@brand.Name">@brand.Name&nbsp;<small>@brand.Country?.Name</small></a></div>
+    }
+}
+
+@code {
+    [Parameter] public string? Name { get; set; }
+    private IEnumerable<Brand>? brands;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrEmpty(Name)) return;
+        brands = await Http.GetFromJsonAsync<IEnumerable<Brand>>("api/brand");
+    }
+}

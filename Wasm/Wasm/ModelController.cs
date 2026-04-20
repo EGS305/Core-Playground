@@ -6,11 +6,11 @@ namespace Wasm
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GroupController(BlazorContext context) : ControllerBase
+    public class ModelController(BlazorContext context) : ControllerBase
     {
         private readonly BlazorContext context = context;
 
         [HttpGet]
-        public IEnumerable<Group> Get() => [.. context.Groups];
+        public IEnumerable<Model> Get() => [.. context.Models];
     }
 }
