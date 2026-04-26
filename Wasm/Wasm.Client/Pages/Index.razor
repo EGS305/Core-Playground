@@ -3,10 +3,11 @@
 
 <h2>WASM</h2>
 <h3>Automotive groups</h3>
+<input value="@filter" @onkeydown="FilterKey" @onkeydown:preventDefault placeholder="Filter..." />
 @if (groups != null)
 {
     <ol>
-        @foreach (var group in groups)
+        @foreach (var group in FilteredGroups)
         {
             <li><a href="/group/@group.Name">@group.Name</a></li>
         }
@@ -14,10 +15,24 @@
 }
 
 @code {
-    private IEnumerable<Group>? groups;
+    private IEnumerable<Group> groups = Array.Empty<Group>();
+    private string filter = string.Empty;
+    private IEnumerable<Group> FilteredGroups => groups.Where(group => string.IsNullOrEmpty(filter) || string.IsNullOrEmpty(group.Name) || group.Name.Contains(filter, StringComparison.OrdinalIgnoreCase));
 
     protected override async Task OnInitializedAsync()
     {
-        groups = await Http.GetFromJsonAsync<IEnumerable<Group>>("api/group");
+        groups = await Http.GetFromJsonAsync<IEnumerable<Group>>("api/group") ?? Array.Empty<Group>();
+    }
+
+    private void FilterKey(KeyboardEventArgs e)
+    {
+        if (e.Key == "Backspace" && filter.Length > 0)
+        {
+            filter = filter[..^1];
+        }
+        else if (char.IsLetterOrDigit((char)e.Key[0]))
+        {
+            filter += e.Key;
+        }
     }
 }

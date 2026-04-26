@@ -11,4 +11,11 @@
 </div>
 
 <hr />
-EGS &copy; 2026
+<div>EGS <span class="clickable" @onclick="OnCopyrightClick">&copy;</span> @Year</div>
+
+@code {
+    private const int YEAR = 2026;
+    private int Year { get; set; } = YEAR;
+
+    private void OnCopyrightClick(MouseEventArgs e) => Year = e.CtrlKey ? YEAR : (int)e.ClientX;
+}

@@ -1,9 +1,10 @@
 ﻿@page "/group/{name?}" //route constraint: name:int ; catch-all: {*name} ignores '/'
 @inject HttpClient Http
 
+<a href="">All groups</a>
+
 @if (string.IsNullOrEmpty(Name))
 {
-    <a href="">All groups</a>
     <p>No brand name passed.</p>
     return;
 }
