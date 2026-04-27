@@ -1,13 +1,13 @@
 ﻿@page "/brand/{id:int}"
 @inject HttpClient Http
 
-<a href="/group/"></a>
-
 @if (Brand == null)
 {
     <p>Brand not found.</p>
     return;
 }
+
+<a href="/group/@Brand.Group.Name">@Brand.Group.Name</a>
 
 <h3>@Brand.Name</h3>
 @if (Types != null)

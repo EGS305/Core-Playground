@@ -25,6 +25,7 @@ namespace Blazor.Models
         public required string Name { get; set; }
         public required Country Country { get; set; }
         public string? LogoUrl { get; set; }
+        public required Group Group { get; set; }
         public ICollection<Model> Models { get; set; } = [];
 
         public override string ToString() => Name ?? "?";

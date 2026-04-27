@@ -14,7 +14,10 @@
 {
     foreach (var brand in brands)
     {
-        <div><a href="/brand/@brand.Id">@brand.Name&nbsp;<small>(@brand.Country?.Name)</small></a></div>
+        <div>
+            <img src="@brand.LogoUrl" alt="@brand.Name" width="48" />
+            <a href="/brand/@brand.Id">@brand.Name&nbsp;<small>(@brand.Country?.Name)</small></a>
+        </div>
     }
 }
 
