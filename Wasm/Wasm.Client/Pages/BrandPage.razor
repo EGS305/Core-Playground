@@ -1,0 +1,32 @@
+﻿@page "/brand/{id:int}"
+@inject HttpClient Http
+
+<a href="/group/"></a>
+
+@if (Brand == null)
+{
+    <p>Brand not found.</p>
+    return;
+}
+
+<h3>@Brand.Name</h3>
+@if (Types != null)
+{
+    foreach (var type in Types)
+    {
+        <div><a href="/type/@type.Name">@type.Name</a></div>
+    }
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Brand? Brand { get; set; }
+    private IEnumerable<Client.Type>? Types { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id <= 0) return;
+        Brand = await Http.GetFromJsonAsync<Brand>("api/brand/" + Id);
+        Types = await Http.GetFromJsonAsync<IEnumerable<Client.Type>>("api/type/" + Id);
+    }
+}

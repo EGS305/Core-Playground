@@ -17,7 +17,11 @@ namespace Wasm
             Id = brand.Id,
             Name = brand.Name,
             Country = brand.Country,
-            LogoUrl = brand.LogoUrl
-        })];
+            LogoUrl = brand.LogoUrl,
+            Group = brand.Group
+        })]; //Had to prevent a circular reference.
+
+        [HttpGet("{id}")]
+        public Brand Get(int id) => context.Brands.Single(brand => brand.Id == id);
     }
 }

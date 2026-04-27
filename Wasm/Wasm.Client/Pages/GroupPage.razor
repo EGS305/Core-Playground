@@ -5,7 +5,7 @@
 
 @if (string.IsNullOrEmpty(Name))
 {
-    <p>No brand name passed.</p>
+    <p>No group name passed.</p>
     return;
 }
 
@@ -14,7 +14,7 @@
 {
     foreach (var brand in brands)
     {
-        <div><a href="/brand/@brand.Name">@brand.Name&nbsp;<small>@brand.Country?.Name</small></a></div>
+        <div><a href="/brand/@brand.Id">@brand.Name&nbsp;<small>(@brand.Country?.Name)</small></a></div>
     }
 }
 
