@@ -12,13 +12,19 @@
 <h3>@Name</h3>
 @if (brands != null)
 {
-    foreach (var brand in brands)
-    {
-        <div>
-            <img src="@brand.LogoUrl" alt="@brand.Name" width="48" />
-            <a href="/brand/@brand.Id">@brand.Name&nbsp;<small>(@brand.Country?.Name)</small></a>
-        </div>
-    }
+    <ul class="list-group">
+        @foreach (var brand in brands)
+        {
+            <li class="list-group-item">
+                @if (!string.IsNullOrEmpty(brand.LogoUrl))
+                {
+                    <img src="@brand.LogoUrl" class="card-img-top" alt="@brand.Name" style="max-width: 64px;">
+                }
+                &nbsp;<a href="/brand/@brand.Id">@brand.Name</a>&nbsp;
+                <small>@brand.Country?.Name</small>
+            </li>
+        }
+    </ul>
 }
 
 @code {
