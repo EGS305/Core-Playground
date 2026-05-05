@@ -94,3 +94,13 @@ code {
 .clickable {
     cursor: pointer;
 }
+
+.car-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 10px;
+}
+
+    .car-grid div {
+        padding: 10px;
+    }

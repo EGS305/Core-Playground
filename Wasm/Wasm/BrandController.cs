@@ -11,13 +11,14 @@ namespace Wasm
     {
         private readonly BlazorContext context = context;
 
-        [HttpGet]
-        public IEnumerable<Brand> Get() => [.. context.Brands
+        [HttpGet("{groupName}")]
+        public IEnumerable<Brand> Get(string groupName) => [.. context.Brands
+            .Where(brand => brand.Group.Name == groupName)
             .Include(brand => brand.Country)
             .Include(brand => brand.Group)
             .Select(brand => CreateBrand(brand))];
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public Brand Get(int id) => CreateBrand(context.Brands
             .Include(brand => brand.Country)
             .Include(brand => brand.Group)
@@ -26,7 +27,7 @@ namespace Wasm
         /// <summary>
         /// Prevent circular references on models and group.
         /// </summary>
-        private static Brand CreateBrand(Brand brand) => new Brand
+        private static Brand CreateBrand(Brand brand) => new()
         {
             Id = brand.Id,
             Name = brand.Name,

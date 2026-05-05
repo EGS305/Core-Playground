@@ -9,17 +9,56 @@
 
 <a href="/group/@Brand.Group.Name">@Brand.Group.Name</a>
 
-<h3>@Brand.Name</h3>
-<QuickGrid Class="table" ItemsProvider="LoadTypes" TGridItem="Client.Type">
-    <PropertyColumn Property="type => type.Name" />
-    <PropertyColumn Property="type => type.ProductionStart" title="From" />
-    <PropertyColumn Property="type => type.ProductionEnd" Title="Until" />
-    <PropertyColumn Property="type => type.Quantity" />
-</QuickGrid>
+<div class="car-grid">
+    <div>
+        <img src="@Brand.LogoUrl" alt="@Brand.Name" style="max-width: 64px;">
+        <h3>@Brand.Name</h3>
+        <QuickGrid Class="table" ItemsProvider="LoadModels" TGridItem="Model">
+            <TemplateColumn Title="Model">
+                <span class="btn btn-link p-0 m-0" @onclick="() => SelectedModel = context">@GetModelNames(context)</span>
+            </TemplateColumn>
+            <PropertyColumn Property="model => model.Generations.Count" Title="Generations" />
+        </QuickGrid>
+    </div>
+    <div>
+        @if (SelectedModel != null && SelectedModel.Generations != null)
+        {
+            <h4>@GetModelNames(SelectedModel)</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Style</th>
+                        <th>From</th>
+                        <th>Until</th>
+                        <th>Nr.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var generation in SelectedModel.Generations)
+                    {
+                        <tr>
+                            <th colspan="4">Generation @generation.SequenceNumber</th>
+                        </tr>
+                        @foreach (var type in generation.Types)
+                        {
+                            <tr>
+                                <td>@type.Style.Name</td>
+                                <td>@type.ProductionStart</td>
+                                <td>@type.ProductionEnd</td>
+                                <td>@type.Quantity.ToString("N0")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
 
 @code {
     [Parameter] public int Id { get; set; }
     private Brand? Brand { get; set; }
+    private Model? SelectedModel { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,14 +66,19 @@
         Brand = await Http.GetFromJsonAsync<Brand>("api/brand/" + Id);
     }
 
-    private async ValueTask<GridItemsProviderResult<Client.Type>> LoadTypes(GridItemsProviderRequest<Client.Type> request)
+    private async ValueTask<GridItemsProviderResult<Model>> LoadModels(GridItemsProviderRequest<Model> request)
     {
-        var result = await Http.GetFromJsonAsync<ICollection<Client.Type>>("api/type/" + Id);
+        var result = await Http.GetFromJsonAsync<ICollection<Model>>("api/model/" + Id);
 
-        return new GridItemsProviderResult<Client.Type>
+        return new GridItemsProviderResult<Model>
         {
-            Items = result ?? Array.Empty<Client.Type>(),
+            Items = result ?? Array.Empty<Model>(),
             TotalItemCount = result?.Count() ?? 0
         };
+    }
+
+    private string GetModelNames(Model model)
+    {
+        return string.Join(", ", model.Generations.SelectMany(gen => gen.Types).Select(type => type.Name).Order().Distinct());
     }
 }

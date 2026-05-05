@@ -11,6 +11,6 @@ namespace Wasm
         private readonly BlazorContext context = context;
 
         [HttpGet("{brandId}")]
-        public IEnumerable<CarType> Get(int brandId) => [.. context.Types];
+        public IEnumerable<CarType> Get(int brandId) => [.. context.Types.Where(type => type.Generation.Brand.Id == brandId)];
     }
 }
