@@ -1,5 +1,7 @@
 ﻿@page "/brand/{id:int}"
 @inject HttpClient Http
+@inject IJSRuntime JS
+@using CarType = Wasm.Client.Type;
 
 @if (Brand == null)
 {
@@ -27,6 +29,7 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th>Name</th>
                         <th>Style</th>
                         <th>From</th>
                         <th>Until</th>
@@ -42,6 +45,7 @@
                         @foreach (var type in generation.Types)
                         {
                             <tr>
+                                <td><span class="btn btn-link p-0 m-0" @onclick="() => OnTypeSelected(generation, type)">@type.Name</span></td>
                                 <td>@type.Style.Name</td>
                                 <td>@type.ProductionStart</td>
                                 <td>@type.ProductionEnd</td>
@@ -55,10 +59,14 @@
     </div>
 </div>
 
+<TypeOffcanvas Id="TypeDetailPanel" Generation="SelectedGeneration" Type="SelectedType" />
+
 @code {
     [Parameter] public int Id { get; set; }
     private Brand? Brand { get; set; }
     private Model? SelectedModel { get; set; }
+    private Generation? SelectedGeneration { get; set; }
+    private CarType? SelectedType { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,5 +88,12 @@
     private string GetModelNames(Model model)
     {
         return string.Join(", ", model.Generations.SelectMany(gen => gen.Types).Select(type => type.Name).Order().Distinct());
+    }
+
+    private async Task OnTypeSelected(Generation generation, CarType type)
+    {
+        SelectedGeneration = generation;
+        SelectedType = type;
+        await JS.InvokeVoidAsync("showOffcanvas", "#TypeDetailPanel");
     }
 }
